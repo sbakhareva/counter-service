@@ -4,6 +4,7 @@ import org.skypro.counter.service.CounterService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.apache.commons.lang3.time.StopWatch;
 
 @RestController
 public class Controller {
@@ -20,8 +21,12 @@ public class Controller {
 
     @GetMapping("/counter")
     public String count() {
+        StopWatch watch = StopWatch.createStarted();
         counterService.countdown();
-        return "Количество запросов: " + counterService.getCount();
+        watch.stop();
+        String response = "Количество запросов: " + counterService.getCount();
+        String time = "Время обработки запроса: " + watch.getNanoTime() + " миллисекунд.";
+        return response + "\n" + time;
     }
 
     @GetMapping("/greetings")
@@ -30,4 +35,6 @@ public class Controller {
                             @RequestParam("lastName") String lastName) {
         return "Hello, " + name + " " + lastName;
     }
+
+
 }
